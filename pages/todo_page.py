@@ -33,3 +33,25 @@ class TodoPage:
 
     def archive_completed(self):
         self.driver.find_element(*self.ARCHIVE_BUTTON).click()
+
+    TASK_LABELS = (By.CSS_SELECTOR, "ul.todo-list li label")
+    TASK_CHECKBOXES = (By.CSS_SELECTOR, "ul.todo-list li input.toggle")
+
+    def complete_task(self, task_name):
+        tasks = self.driver.find_elements(*self.TASK_LABELS)
+        checkboxes = self.driver.find_elements(*self.TASK_CHECKBOXES)
+
+        for i in range(len(tasks)):
+            if tasks[i].text == task_name:
+                checkboxes[i].click()
+                break
+
+    def is_task_completed(self, task_name):
+        tasks = self.driver.find_elements(By.CSS_SELECTOR, "ul.todo-list li")
+
+        for task in tasks:
+            label = task.find_element(By.TAG_NAME, "label")
+            if label.text == task_name:
+                return "completed" in task.get_attribute("class")
+
+        return False

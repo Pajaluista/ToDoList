@@ -1,3 +1,4 @@
+import allure
 from pages.todo_page import TodoPage
 
 
