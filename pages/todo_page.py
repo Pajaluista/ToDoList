@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class TodoPage:
@@ -38,20 +40,23 @@ class TodoPage:
     TASK_CHECKBOXES = (By.CSS_SELECTOR, "ul.todo-list li input.toggle")
 
     def complete_task(self, task_name):
-        tasks = self.driver.find_elements(*self.TASK_LABELS)
-        checkboxes = self.driver.find_elements(*self.TASK_CHECKBOXES)
-
-        for i in range(len(tasks)):
-            if tasks[i].text == task_name:
-                checkboxes[i].click()
+        # ждем, пока хотя бы один li появится
+        tasks = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "ul li"))
+        )
+        for task in tasks:
+            text_elem = task.find_element(By.CSS_SELECTOR, "span")  # span внутри li содержит текст
+            if text_elem.text == task_name:
+                checkbox = task.find_element(By.CSS_SELECTOR, "input[type='checkbox']")
+                checkbox.click()
                 break
 
     def is_task_completed(self, task_name):
-        tasks = self.driver.find_elements(By.CSS_SELECTOR, "ul.todo-list li")
-
+        tasks = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "ul li"))
+        )
         for task in tasks:
-            label = task.find_element(By.TAG_NAME, "label")
-            if label.text == task_name:
+            text_elem = task.find_element(By.CSS_SELECTOR, "span")
+            if text_elem.text == task_name:
                 return "completed" in task.get_attribute("class")
-
         return False
