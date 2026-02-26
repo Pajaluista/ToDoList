@@ -26,3 +26,12 @@ allure serve reports
 
 ## 🌐 Tested Application
 https://crossbrowsertesting.github.io/todo-app.html
+
+## 💼 What this project demonstrates
+
+- UI automation with Selenium
+- Page Object Model architecture
+- Pytest fixtures
+- Allure reporting
+- CI/CD with GitHub Actions
+- Screenshot capture on failure
